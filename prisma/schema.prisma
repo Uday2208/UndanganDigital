@@ -1,0 +1,117 @@
+// Prisma schema — database utama WAJIB MySQL (dev: XAMPP, prod: MySQL-compatible).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum FamilySide {
+  pria
+  wanita
+}
+
+enum Attendance {
+  hadir
+  tidak_hadir
+}
+
+model Wedding {
+  id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+
+  slug String @unique @db.VarChar(100)
+
+  groomName       String @map("groom_name") @db.VarChar(80)
+  groomFullName   String @map("groom_full_name") @db.VarChar(150)
+  groomParents    String @map("groom_parents") @db.VarChar(200)
+  groomPhoto      String? @map("groom_photo") @db.VarChar(500)
+  brideName       String @map("bride_name") @db.VarChar(80)
+  brideFullName   String @map("bride_full_name") @db.VarChar(150)
+  brideParents    String @map("bride_parents") @db.VarChar(200)
+  bridePhoto      String? @map("bride_photo") @db.VarChar(500)
+
+  coverImage String? @map("cover_image") @db.VarChar(500)
+  quote      String? @db.VarChar(500)
+  quoteSource String? @map("quote_source") @db.VarChar(120)
+
+  weddingDate    DateTime @map("wedding_date") @db.Date
+  akadDate       DateTime @default(now()) @map("akad_date") @db.Date
+  receptionDate  DateTime @default(now()) @map("reception_date") @db.Date
+  akadTime       DateTime @map("akad_time") @db.Time(0)
+  receptionTime  DateTime @map("reception_time") @db.Time(0)
+  receptionEndTime DateTime? @map("reception_end_time") @db.Time(0)
+  timezone       String   @default("Asia/Jakarta") @db.VarChar(64)
+  familyTitle    String   @default("Turut Mengundang") @map("family_title") @db.VarChar(100)
+
+
+  venueName    String  @map("venue_name") @db.VarChar(150)
+  venueAddress String  @map("venue_address") @db.VarChar(300)
+  mapsUrl      String? @map("maps_url") @db.VarChar(500)
+
+  bankName          String? @map("bank_name") @db.VarChar(60)
+  bankAccountNumber String? @map("bank_account_number") @db.VarChar(40)
+  bankAccountHolder String? @map("bank_account_holder") @db.VarChar(120)
+  ewalletName       String? @map("ewallet_name") @db.VarChar(60)
+  ewalletNumber     String? @map("ewallet_number") @db.VarChar(40)
+  ewalletHolder     String? @map("ewallet_holder") @db.VarChar(120)
+  qrisImage         String? @map("qris_image") @db.VarChar(500)
+
+  musicUrl   String? @map("music_url") @db.VarChar(500)
+  musicTitle String? @map("music_title") @db.VarChar(150)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime(0)
+
+  gallery  Gallery[]
+  families Family[]
+  wishes   Wish[]
+
+  @@map("weddings")
+}
+
+model Gallery {
+  id        BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  weddingId BigInt @map("wedding_id") @db.UnsignedBigInt
+  imageUrl  String @map("image_url") @db.VarChar(500)
+  altText   String @map("alt_text") @db.VarChar(200)
+  width     Int    @default(1200)
+  height    Int    @default(1600)
+  sortOrder Int    @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(0)
+
+  wedding Wedding @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  @@index([weddingId, sortOrder])
+  @@map("gallery")
+}
+
+model Family {
+  id        BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  weddingId BigInt     @map("wedding_id") @db.UnsignedBigInt
+  side      FamilySide
+  name      String     @db.VarChar(120)
+  role      String     @db.VarChar(120)
+  sortOrder Int        @default(0) @map("sort_order")
+
+  wedding Wedding @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  @@index([weddingId, side, sortOrder])
+  @@map("families")
+}
+
+model Wish {
+  id        BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  weddingId BigInt     @map("wedding_id") @db.UnsignedBigInt
+  guestName String     @map("guest_name") @db.VarChar(80)
+  message   String     @db.VarChar(500)
+  attendance Attendance
+  createdAt DateTime   @default(now()) @map("created_at") @db.DateTime(0)
+
+  wedding Wedding @relation(fields: [weddingId], references: [id], onDelete: Cascade)
+
+  @@index([weddingId, createdAt])
+  @@map("wishes")
+}
