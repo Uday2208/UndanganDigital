@@ -34,7 +34,7 @@ export default async function Page({
     getWishes(wedding.id),
   ]);
 
-  const dateLabel = `${formatDayName(wedding.receptionDate)}, ${formatLongDate(wedding.receptionDate)}`;
+  const dateLabel = `${formatDayName(wedding.weddingDate)}, ${formatLongDate(wedding.weddingDate)}`;
 
   const hasGift = Boolean(
     wedding.bankAccountNumber || wedding.ewalletNumber || wedding.qrisImage
