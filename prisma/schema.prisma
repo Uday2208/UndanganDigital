@@ -37,8 +37,8 @@ model Wedding {
   quoteSource String? @map("quote_source") @db.VarChar(120)
 
   weddingDate    DateTime @map("wedding_date") @db.Date
-  akadDate       DateTime @default(now()) @map("akad_date") @db.Date
-  receptionDate  DateTime @default(now()) @map("reception_date") @db.Date
+  akadDate       DateTime @map("akad_date") @db.Date
+  receptionDate  DateTime @map("reception_date") @db.Date
   akadTime       DateTime @map("akad_time") @db.Time(0)
   receptionTime  DateTime @map("reception_time") @db.Time(0)
   receptionEndTime DateTime? @map("reception_end_time") @db.Time(0)

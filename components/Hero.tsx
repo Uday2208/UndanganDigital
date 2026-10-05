@@ -6,7 +6,7 @@ import type { PublicWedding } from "@/lib/types";
 import { formatDayName, formatLongDate } from "@/lib/datetime";
 
 export function Hero({ wedding }: { wedding: PublicWedding }) {
-  const dateLabel = `${formatDayName(wedding.weddingDate)}, ${formatLongDate(wedding.weddingDate)}`;
+  const dateLabel = `${formatDayName(wedding.receptionDate)}, ${formatLongDate(wedding.receptionDate)}`;
 
   return (
     <header id="home" aria-label="Pembuka" className="scroll-mt-4">
@@ -37,7 +37,7 @@ export function Hero({ wedding }: { wedding: PublicWedding }) {
       <div className="px-8 pb-6 pt-4">
         <Reveal>
           <p className="mb-5 text-center text-[11px] uppercase tracking-[0.35em] text-mist">Menuju Hari Bahagia</p>
-          <Countdown targetIso={wedding.akadAt} />
+          <Countdown targetIso={wedding.receptionAt} />
         </Reveal>
       </div>
     </header>
